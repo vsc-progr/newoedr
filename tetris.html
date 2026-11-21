@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f131a">
+<title>Tetris · BMW Mini-Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tetris.css">
+</head>
+<body>
+
+<div class="tetris-wrap">
+
+  <div class="unlock-banner" id="unlockBanner">
+    <span class="unlock-banner-dot"></span>
+    <span>Поздравления открыты</span>
+    <a href="index.html" class="unlock-banner-link">Перейти →</a>
+  </div>
+
+  <header class="tetris-header">
+    <div class="eyebrow eyebrow-blue">==MINI-GAME==</div>
+    <h1 class="tetris-title">Тетрис</h1>
+    <p class="tetris-sub">
+      Набери <strong>4</strong> очка. 1 линия = 1 очко.
+    </p>
+  </header>
+
+  <main class="tetris-main">
+    <div class="tetris-board-wrap">
+      <canvas id="tetrisCanvas" width="240" height="480"></canvas>
+      <div class="tetris-overlay show" id="tetrisOverlay">
+        <div class="tetris-overlay-inner">
+          <div class="tetris-overlay-title" id="overlayTitle">Готов?</div>
+          <div class="tetris-overlay-sub" id="overlaySub">
+            Стрелки ← → ↓ · Пробел — поворот
+          </div>
+          <button class="btn btn-primary" id="overlayBtn">СТАРТ</button>
+        </div>
+      </div>
+    </div>
+
+    <aside class="tetris-side">
+      <div class="score-card">
+        <div class="score-eyebrow">SCORE</div>
+        <div class="score-value"><span id="scoreVal">0</span> / 4</div>
+        <div class="score-bar"><div class="score-bar-fill" id="scoreBar"></div></div>
+      </div>
+
+      <div class="next-card">
+        <div class="score-eyebrow">NEXT</div>
+        <canvas id="nextCanvas" width="120" height="120"></canvas>
+      </div>
+
+      <div class="controls-card">
+        <div class="score-eyebrow">CONTROLS</div>
+        <ul class="controls-list">
+          <li><kbd>←</kbd><kbd>→</kbd> движение</li>
+          <li><kbd>↓</kbd> ускорить</li>
+          <li><kbd>↑</kbd> / <kbd>Пробел</kbd> поворот</li>
+          <li><kbd>P</kbd> пауза</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Кнопки ВСЕГДА видны на мобиле — фиксированы внизу -->
+  <div class="touch-controls" id="touchControls">
+    <button class="touch-btn touch-left" id="btnLeft" aria-label="Влево">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <button class="touch-btn touch-rotate" id="btnRotate" aria-label="Поворот">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+    </button>
+    <button class="touch-btn touch-right" id="btnRight" aria-label="Вправо">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+    <button class="touch-btn touch-down" id="btnDown" aria-label="Вниз">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <button class="touch-btn touch-pause" id="btnPause" aria-label="Пауза">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" stroke="none">
+        <rect x="6" y="5" width="4" height="14" rx="1"/>
+        <rect x="14" y="5" width="4" height="14" rx="1"/>
+      </svg>
+    </button>
+  </div>
+
+  <footer class="tetris-footer">
+    <a href="index.html" class="btn btn-outline-light">← Назад к поздравлению</a>
+  </footer>
+
+</div>
+
+<div class="tetris-modal" id="winModal">
+  <div class="tetris-modal-inner">
+    <div class="eyebrow eyebrow-blue" id="modalEyebrow">SUCCESS</div>
+    <h2 class="tetris-modal-title" id="modalTitle">4 очка набраны!</h2>
+    <p class="tetris-modal-sub" id="modalSub">
+      Поздравления открыты. Можно продолжать или вернуться.
+    </p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="modalContinue">ПРОДОЛЖИТЬ</button>
+      <a href="index.html" class="btn btn-outline-light">К ПОЗДРАВЛЕНИЮ</a>
+    </div>
+  </div>
+</div>
+
+<script src="tetris.js"></script>
+</body>
+</html>
