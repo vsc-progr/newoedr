@@ -207,8 +207,8 @@
 
   const TARGET = 90;
   const HOLD_TICK_MS = 30;
-  const RISE_PER_TICK = 1.6;
-  const FALL_PER_TICK = 2.4;
+  const RISE_PER_TICK = 0.49;
+  const FALL_PER_TICK = 0.73;
   const TAPS_REQUIRED = 3;
 
   let rpm = 0;
