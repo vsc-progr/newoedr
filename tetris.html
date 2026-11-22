@@ -21,7 +21,7 @@
   </div>
 
   <header class="tetris-header">
-    <div class="eyebrow eyebrow-blue">==MINI-GAME==</div>
+    <div class="eyebrow eyebrow-blue">Мини-игра</div>
     <h1 class="tetris-title">Тетрис</h1>
     <p class="tetris-sub">
       Набери <strong>4</strong> очка. 1 линия = 1 очко.
@@ -44,18 +44,18 @@
 
     <aside class="tetris-side">
       <div class="score-card">
-        <div class="score-eyebrow">SCORE</div>
+        <div class="score-eyebrow">Очки</div>
         <div class="score-value"><span id="scoreVal">0</span> / 4</div>
         <div class="score-bar"><div class="score-bar-fill" id="scoreBar"></div></div>
       </div>
 
       <div class="next-card">
-        <div class="score-eyebrow">NEXT</div>
+        <div class="score-eyebrow">Следующая</div>
         <canvas id="nextCanvas" width="120" height="120"></canvas>
       </div>
 
       <div class="controls-card">
-        <div class="score-eyebrow">CONTROLS</div>
+        <div class="score-eyebrow">Управление</div>
         <ul class="controls-list">
           <li><kbd>←</kbd><kbd>→</kbd> движение</li>
           <li><kbd>↓</kbd> ускорить</li>
@@ -66,7 +66,6 @@
     </aside>
   </main>
 
-  <!-- Кнопки ВСЕГДА видны на мобиле — фиксированы внизу -->
   <div class="touch-controls" id="touchControls">
     <button class="touch-btn touch-left" id="btnLeft" aria-label="Влево">
       <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -105,7 +104,7 @@
 
 <div class="tetris-modal" id="winModal">
   <div class="tetris-modal-inner">
-    <div class="eyebrow eyebrow-blue" id="modalEyebrow">SUCCESS</div>
+    <div class="eyebrow eyebrow-blue" id="modalEyebrow">Готово</div>
     <h2 class="tetris-modal-title" id="modalTitle">4 очка набраны!</h2>
     <p class="tetris-modal-sub" id="modalSub">
       Поздравления открыты. Можно продолжать или вернуться.
