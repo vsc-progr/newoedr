@@ -1,6 +1,3 @@
-/* ============================================
-   BMW DESIGN SYSTEM
-   ============================================ */
 :root {
   --bmw-blue: #1c69d4;
   --bmw-blue-hover: #1559b8;
@@ -50,9 +47,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ============================================
-   ПРЕЛОАДЕР
-   ============================================ */
+/* Прелоадер */
 .preloader {
   position: fixed;
   inset: 0;
@@ -104,15 +99,11 @@ body {
   color: var(--on-dark-soft);
 }
 
-/* ============================================
-   ОБЩИЕ КОНТЕЙНЕРЫ
-   ============================================ */
+/* Контейнеры */
 .section-wrap { padding: var(--space-4xl) var(--space-lg); }
 .container { max-width: var(--container); margin: 0 auto; width: 100%; }
 
-/* ============================================
-   ТИПОГРАФИКА
-   ============================================ */
+/* Типографика */
 .eyebrow {
   font-size: 11px;
   letter-spacing: 0.3em;
@@ -141,9 +132,7 @@ body {
 }
 .sub-light { color: var(--on-dark-soft); }
 
-/* ============================================
-   ПАНЕЛИ
-   ============================================ */
+/* Панели */
 .panel {
   border-radius: var(--radius-lg);
   padding: var(--space-4xl) var(--space-3xl);
@@ -186,9 +175,7 @@ body {
   z-index: -1;
 }
 
-/* ============================================
-   КНОПКИ
-   ============================================ */
+/* Кнопки */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -285,9 +272,7 @@ body {
 .btn .btn-arrow { transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
 .btn:hover .btn-arrow { transform: translateX(4px); }
 
-/* ============================================
-   SCENE (БЛОК 1 — ПАРАЛЛАКС)
-   ============================================ */
+/* Первая сцена: параллакс */
 .scene { position: relative; height: 300vh; background: var(--surface-dark); }
 
 .scene-sticky {
@@ -473,9 +458,7 @@ body {
   background: var(--bmw-blue);
 }
 
-/* ============================================
-   IGNITION PANEL (БЛОК 2)
-   ============================================ */
+/* Блок Ignition */
 .ignition-panel { text-align: center; }
 .ignition-panel .section-title,
 .ignition-panel .section-sub { color: var(--on-dark); }
@@ -556,9 +539,7 @@ body {
   50% { transform: translateY(4px); }
 }
 
-/* ============================================
-   PLACEHOLDER PANEL (БЛОК 3)
-   ============================================ */
+/* Блок с кнопкой перехода в мини-игру */
 .placeholder-panel { text-align: center; }
 .placeholder-inner { max-width: 520px; margin: 0 auto; }
 
@@ -581,9 +562,7 @@ body {
   .placeholder-actions .btn { width: 100%; }
 }
 
-/* ============================================
-   MESSAGES (БЛОК 4)
-   ============================================ */
+/* Поздравления */
 .messages-head { text-align: center; margin-bottom: var(--space-2xl); }
 .messages-grid {
   display: grid;
@@ -629,10 +608,18 @@ body {
   padding-top: var(--space-md);
   text-align: right;
 }
+.message-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-lg);
+  object-fit: cover;
+}
 
-/* ============================================
-   MODEL3D PANEL (БЛОК 5) — ТОЛЬКО МОДЕЛЬ
-   ============================================ */
+/* 3D-блок.
+   Стили сохранены для возврата секции #model3d в разметку.
+   Сейчас HTML-секция закомментирована в index.html. */
 .model3d-panel {
   padding: var(--space-2xl) 0;
   background: transparent;
@@ -718,15 +705,7 @@ body {
   .model3d-stage { height: 60vh; min-height: 340px; }
 }
 
-/* ============================================
-   GALLERY (БЛОК 6)
-   ============================================ */
-.gallery-panel { text-align: center; }
-.gallery-inner { max-width: 520px; margin: 0 auto; }
-
-/* ============================================
-   FOOTER
-   ============================================ */
+/* Подвал */
 .footer {
   background: var(--surface-dark);
   padding: var(--space-2xl) var(--space-lg);
@@ -739,19 +718,15 @@ body {
 }
 .footer span { color: var(--on-dark); font-weight: 700; }
 
-/* ============================================
-   🔒 БЛОКИРОВКА КОНТЕНТА ДО ТЕТРИСА
-   ============================================ */
+/* Блокировка контента до мини-игры */
 body.game-locked #messages,
 body.game-locked #model3d,
-body.game-locked #galleryBtn,
 body.game-locked .footer {
   display: none !important;
 }
 
 #messages,
 #model3d,
-#galleryBtn,
 .footer {
   animation: contentFadeIn 0.6s ease both;
 }
@@ -760,14 +735,10 @@ body.game-locked .footer {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ============================================
-   SCROLL LOCK
-   ============================================ */
+/* Блокировка скролла */
 body.lock-scroll { overflow: hidden; height: 100vh; height: 100dvh; }
 
-/* ============================================
-   TOAST
-   ============================================ */
+/* Всплывающее уведомление */
 .scroll-lock-toast {
   position: fixed;
   bottom: var(--space-lg);
@@ -802,9 +773,7 @@ body.lock-scroll { overflow: hidden; height: 100vh; height: 100dvh; }
   white-space: nowrap;
 }
 
-/* ============================================
-   АДАПТИВ
-   ============================================ */
+/* Адаптив */
 @media (min-width: 1400px) {
   :root { --letter-size: 5rem; --letter-gap: 10px; --letter-spacing: 0.06em; --word-gap: 20px; }
 }

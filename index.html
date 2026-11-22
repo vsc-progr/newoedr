@@ -13,17 +13,15 @@
 </head>
 <body>
 
-  <!-- ==================== ЭКРАН ЗАГРУЗКИ ==================== -->
   <div class="preloader" id="preloader">
     <div class="preloader-inner">
-      <div class="preloader-eyebrow">С днём Рождения· SYSTEM STARTUP</div>
-      <div class="preloader-title">INITIALIZING</div>
+      <div class="preloader-eyebrow">С днём Рождения</div>
+      <div class="preloader-title">Загрузка</div>
       <div class="preloader-count" id="preloaderCount">3</div>
       <div class="preloader-hint">Пожалуйста, подождите</div>
     </div>
   </div>
 
-  <!-- ==================== БЛОК 1: СЦЕН-ПАРАЛЛАКС ==================== -->
   <section class="scene" id="scene">
     <div class="scene-sticky">
 
@@ -88,9 +86,7 @@
 
       <div class="image-layer" id="imageLayer">
         <div class="image-frame">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='675' viewBox='0 0 1200 675'%3E%3Crect width='1200' height='675' fill='%23ffffff'/%3E%3C/svg%3E"
-               alt=" "
-               class="bmw-image">
+          <img src="hero.jpg" alt=" " class="bmw-image">
         </div>
       </div>
 
@@ -100,12 +96,11 @@
     </div>
   </section>
 
-  <!-- ==================== БЛОК 2: IGNITION ==================== -->
   <section class="section-wrap" id="ignition">
     <div class="container">
       <div class="panel panel-dark ignition-panel">
         <div class="ignition-inner">
-          <div class="eyebrow eyebrow-blue">===IGNITION===</div>
+          <div class="eyebrow eyebrow-blue">Первым делом</div>
           <h2 class="section-title">Запусти двигатель</h2>
           <p class="section-sub">
             Нажми три раза, чтобы разблокировать педаль,<br>
@@ -137,12 +132,11 @@
     </div>
   </section>
 
-  <!-- ==================== БЛОК 3: КНОПКА НА ФОНЕ ==================== -->
   <section class="section-wrap" id="placeholderBtn">
     <div class="container">
       <div class="panel panel-cover placeholder-panel">
         <div class="placeholder-inner">
-          <div class="eyebrow eyebrow-light">MINI-GAME</div>
+          <div class="eyebrow eyebrow-light">Мини-игра</div>
           <h2 class="section-title title-light">Испытание</h2>
           <p class="section-sub sub-light">
             Собери 4 очка в Тетрисе,<br>
@@ -164,30 +158,36 @@
     </div>
   </section>
 
-  <!-- ==================== БЛОК 4: ПОЗДРАВЛЕНИЯ ==================== -->
   <section class="section-wrap" id="messages" data-locked="true">
     <div class="container">
       <div class="messages-head">
-        <div class="eyebrow eyebrow-blue">WISHES</div>
+        <div class="eyebrow eyebrow-blue">Пожелания</div>
         <h2 class="section-title">Поздравления</h2>
         <p class="section-sub">Пара тёплых слов для тебя.</p>
       </div>
 
       <div class="messages-grid">
+        <div class="message-card">
+          <img src="wish-1.jpg" alt="Поздравление" class="message-image">
+          <div class="message-name">Твоя мама</div>
+        </div>
         <div class="message-card"><div class="message-text"></div><div class="message-name"></div></div>
         <div class="message-card"><div class="message-text"></div><div class="message-name"></div></div>
         <div class="message-card"><div class="message-text"></div><div class="message-name"></div></div>
-        <div class="message-card"><div class="message-text"></div><div class="message-name"></div></div>
-        <div class="message-card"><div class="message-text"></div><div class="message-name"></div></div>
+        <div class="message-card"><div class="message-text">С Днём Рождения, папа! Я желаю тебе всего самого хорошего, в первую очередь здоровья и счастья и чтобы мечты сбывались!  </div><div class="message-name">Вася</div></div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== БЛОК 5: 3D-МОДЕЛЬ (ТОЛЬКО МОДЕЛЬ) ==================== -->
+  <!--
+    Блок 3D-модели временно отключён.
+    Причина: лимит GitHub Pages 25 МБ на файл модели.
+    Логика в script.js (initModel3D + __carModelPromise) сохранена и
+    активируется автоматически, когда эта секция будет возвращена.
+
   <section class="section-wrap" id="model3d">
     <div class="container">
       <div class="panel panel-dark model3d-panel">
-
         <div class="model3d-stage" id="model3dStage">
           <canvas id="model3dCanvas"></canvas>
           <div class="model3d-loader" id="model3dLoader">
@@ -198,30 +198,13 @@
             <small>Убедись, что <code>model.glb</code> лежит рядом с <code>index.html</code>.</small>
           </div>
         </div>
-
       </div>
     </div>
   </section>
-
-  <!-- ==================== БЛОК 6: ГАЛЕРЕЯ ==================== -->
-  <section class="section-wrap" id="galleryBtn">
-    <div class="container">
-      <div class="panel panel-light gallery-panel">
-        <div class="gallery-inner">
-          <div class="eyebrow eyebrow-blue">PHOTO ARCHIVE</div>
-          <h2 class="section-title">Галерея</h2>
-          <p class="section-sub">Лучшие моменты — впереди.</p>
-          <button class="btn btn-dark" type="button">
-            <span>ОТКРЫТЬ ГАЛЕРЕЮ</span>
-            <span class="btn-arrow">📷</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
+  -->
 
   <footer class="footer">
-    <span>C Днём Рождения!</span> Сайт оформлен в стиле БМВ, что означает -Б-ыть лучши-М- -В-езде!
+    <span>C Днём Рождения!</span> Сайт оформлен в стиле БМВ, что означает — Б-ыть лучши-М- — В-езде!
   </footer>
 
   <div class="scroll-lock-toast" id="lockToast">Сначала пройди мини-игру 🎮</div>
