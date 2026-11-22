@@ -1,20 +1,14 @@
-(function() {
+(function () {
   'use strict';
 
-  /* ========================================================
-     СБРОС СКРОЛЛА ПРИ ПЕРЕЗАГРУЗКЕ
-     ======================================================== */
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
   window.scrollTo(0, 0);
 
-  /* ========================================================
-     ПРЕДЗАГРУЗКА GLTF/GLB-МОДЕЛИ
-     ======================================================== */
-  // 🔧 Путь до модели. Положи файл рядом с index.html.
-  //    .glb — один файл (рекомендуется)
-  //    .gltf — + .bin и textures/ рядом
+  // Предзагрузка 3D-модели.
+  // Путь до модели: model.glb лежит рядом с index.html.
+  // .glb — единый файл; .gltf требует .bin и textures/ рядом.
   const MODEL_URL = 'model.glb';
 
   window.__carModelPromise = new Promise((resolve, reject) => {
@@ -27,10 +21,8 @@
     loader.load(
       MODEL_URL,
       (gltf) => {
-        // gltf.scene — корневой Object3D модели
         const object = gltf.scene;
 
-        // Центрируем
         const box = new THREE.Box3().setFromObject(object);
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
@@ -39,17 +31,14 @@
         object.position.y -= center.y;
         object.position.z -= center.z;
 
-        // Ставим на пол
         const newBox = new THREE.Box3().setFromObject(object);
         object.position.y -= newBox.min.y;
 
-        // Масштабируем под сцену
         const maxDim = Math.max(size.x, size.y, size.z);
         const targetSize = 6;
         const scale = targetSize / maxDim;
         object.scale.setScalar(scale);
 
-        // Тени + кодировка текстур
         object.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
@@ -66,10 +55,7 @@
 
         resolve(object);
       },
-      (xhr) => {
-        // Прогресс загрузки — при желании выведи в консоль
-        // console.log(`Загрузка модели: ${Math.round((xhr.loaded / xhr.total) * 100)}%`);
-      },
+      () => {},
       (err) => {
         console.error('Ошибка загрузки glTF:', err);
         reject(err);
@@ -77,9 +63,6 @@
     );
   });
 
-  /* ========================================================
-     ПРЕЛОАДЕР — 3 СЕКУНДЫ + ЖДЁМ МОДЕЛЬ (макс 10 сек)
-     ======================================================== */
   const preloader = document.getElementById('preloader');
   const preloaderCount = document.getElementById('preloaderCount');
 
@@ -108,9 +91,7 @@
     maxDelay
   ]).then(hidePreloader);
 
-  /* ========================================================
-     🔒 БЛОКИРОВКА КОНТЕНТА ДО ПРОХОЖДЕНИЯ ТЕТРИСА
-     ======================================================== */
+  // Блокировка контента до прохождения мини-игры.
   (function setupStageLock() {
     const GAME_KEY = 'bmw_tetris_passed';
     const resetBtn = document.getElementById('resetProgressBtn');
@@ -214,142 +195,155 @@
     setTimeout(refreshLock, 1500);
   })();
 
-   /* ========================================================
-     IGNITION — 3 ТАПА + УДЕРЖАНИЕ ДО 90%
-     ======================================================== */
-    const body        = document.body;
-    const ignition    = document.getElementById('ignition');
-    const ignitionBtn = document.getElementById('ignitionBtn');
-    const ignitionTxt = ignitionBtn ? ignitionBtn.querySelector('.ignition-btn-text') : null;
-    const rpmWrap     = document.getElementById('rpmWrap');
-    const rpmFill     = document.getElementById('rpmFill');
-    const rpmVal      = document.getElementById('rpmVal');
-    const ignitionMsg = document.getElementById('ignitionMsg');
+  // Ignition: 3 тапа + удержание до 90%.
+  const body = document.body;
+  const ignition = document.getElementById('ignition');
+  const ignitionBtn = document.getElementById('ignitionBtn');
+  const ignitionTxt = ignitionBtn ? ignitionBtn.querySelector('.ignition-btn-text') : null;
+  const rpmWrap = document.getElementById('rpmWrap');
+  const rpmFill = document.getElementById('rpmFill');
+  const rpmVal = document.getElementById('rpmVal');
+  const ignitionMsg = document.getElementById('ignitionMsg');
 
-    const TARGET = 90;
-    const HOLD_TICK_MS = 30;
-    const RISE_PER_TICK = 1.6;
-    const FALL_PER_TICK = 2.4;
-    const TAPS_REQUIRED = 3;
+  const TARGET = 90;
+  const HOLD_TICK_MS = 30;
+  const RISE_PER_TICK = 1.6;
+  const FALL_PER_TICK = 2.4;
+  const TAPS_REQUIRED = 3;
 
-    let rpm = 0;
-    let holding = false;
-    let done = false;
-    let tickTimer = null;
-    let tapCount = 0;
-    let unlocked = false;
+  let rpm = 0;
+  let holding = false;
+  let done = false;
+  let tickTimer = null;
+  let tapCount = 0;
+  let unlocked = false;
 
-    function renderRpm() {
-      const v = Math.max(0, Math.min(100, rpm));
-      if (rpmFill) rpmFill.style.width = v + '%';
-      if (rpmVal) rpmVal.textContent = Math.round(v);
-      if (v >= TARGET && !done) markIgnitionDone();
+  // Звук двигателя: стартует при третьем нажатии (начало удержания),
+  // зациклен, останавливается при отпускании или достижении 90%.
+  const engineSound = new Audio('engine.mp3');
+  engineSound.loop = true;
+  engineSound.preload = 'auto';
+
+  function playEngineSound() {
+    if (!engineSound) return;
+    engineSound.currentTime = 0;
+    const p = engineSound.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(() => {});
     }
+  }
 
-    function stepRpm() {
-      rpm += holding ? RISE_PER_TICK : -FALL_PER_TICK;
-      if (rpm < 0) rpm = 0;
-      if (rpm > 100) rpm = 100;
-      renderRpm();
+  function stopEngineSound() {
+    if (!engineSound) return;
+    engineSound.pause();
+    engineSound.currentTime = 0;
+  }
 
-      if (holding || rpm > 0) {
-        tickTimer = setTimeout(stepRpm, HOLD_TICK_MS);
-      } else {
-        clearTimeout(tickTimer);
-        tickTimer = null;
+  function renderRpm() {
+    const v = Math.max(0, Math.min(100, rpm));
+    if (rpmFill) rpmFill.style.width = v + '%';
+    if (rpmVal) rpmVal.textContent = Math.round(v);
+    if (v >= TARGET && !done) markIgnitionDone();
+  }
+
+  function stepRpm() {
+    rpm += holding ? RISE_PER_TICK : -FALL_PER_TICK;
+    if (rpm < 0) rpm = 0;
+    if (rpm > 100) rpm = 100;
+    renderRpm();
+
+    if (holding || rpm > 0) {
+      tickTimer = setTimeout(stepRpm, HOLD_TICK_MS);
+    } else {
+      clearTimeout(tickTimer);
+      tickTimer = null;
+    }
+  }
+
+  function startTick() { if (!tickTimer) stepRpm(); }
+
+  function updateButtonLabel() {
+    if (!ignitionTxt) return;
+    if (done) {
+      ignitionTxt.textContent = 'ЗАВЕЛИСЬ!';
+    } else if (!unlocked) {
+      const left = TAPS_REQUIRED - tapCount;
+      ignitionTxt.textContent = `НАЖМИ ${left} РАЗ` + (left === 1 ? '' : 'А');
+    } else {
+      ignitionTxt.textContent = 'ТЕПЕРЬ ЗАЖМИ!';
+    }
+  }
+
+  function handleTap(e) {
+    if (done) return;
+    e.preventDefault();
+
+    if (!unlocked) {
+      tapCount++;
+      if (ignitionBtn) ignitionBtn.classList.add('prep');
+      if (tapCount >= TAPS_REQUIRED) {
+        unlocked = true;
+        if (ignitionBtn) ignitionBtn.classList.remove('prep');
       }
+      updateButtonLabel();
+      return;
     }
 
-    function startTick() { if (!tickTimer) stepRpm(); }
-
-    function updateButtonLabel() {
-      if (!ignitionTxt) return;
-      if (done) {
-        ignitionTxt.textContent = 'ЗАВЕЛИСЬ!';
-      } else if (!unlocked) {
-        const left = TAPS_REQUIRED - tapCount;
-        ignitionTxt.textContent = `НАЖМИ ${left} РАЗ` + (left === 1 ? '' : 'А');
-      } else {
-        ignitionTxt.textContent = 'ТЕПЕРЬ ЗАЖМИ!';
-      }
+    if (!holding) {
+      holding = true;
+      if (ignitionBtn) ignitionBtn.classList.add('active');
+      if (rpmWrap) rpmWrap.classList.add('show');
+      playEngineSound();
+      startTick();
     }
+  }
 
-    function handleTap(e) {
-      if (done) return;
-      e.preventDefault();
+  function handleRelease() {
+    if (done) return;
+    if (!unlocked) return;
+    holding = false;
+    if (ignitionBtn) ignitionBtn.classList.remove('active');
+    stopEngineSound();
+  }
 
-      if (!unlocked) {
-        tapCount++;
-        if (ignitionBtn) ignitionBtn.classList.add('prep');
-        if (tapCount >= TAPS_REQUIRED) {
-          unlocked = true;
-          if (ignitionBtn) ignitionBtn.classList.remove('prep');
-        }
-        updateButtonLabel();
-        return;
-      }
+  if (ignitionTxt) ignitionTxt.textContent = `НАЖМИ ${TAPS_REQUIRED} РАЗА`;
 
-      if (!holding) {
-        holding = true;
-        if (ignitionBtn) ignitionBtn.classList.add('active');
-        if (rpmWrap) rpmWrap.classList.add('show');
-        startTick();
-      }
-    }
+  if (ignitionBtn) {
+    ignitionBtn.addEventListener('mousedown', handleTap);
+    ignitionBtn.addEventListener('touchstart', handleTap, { passive: false });
+    ignitionBtn.addEventListener('mouseleave', handleRelease);
+    ignitionBtn.addEventListener('touchcancel', handleRelease);
+  }
+  window.addEventListener('mouseup', handleRelease);
+  window.addEventListener('touchend', handleRelease);
 
-    function handleRelease() {
-      if (done) return;
-      if (!unlocked) return;
-      holding = false;
-      if (ignitionBtn) ignitionBtn.classList.remove('active');
-    }
-
-    if (ignitionTxt) ignitionTxt.textContent = `НАЖМИ ${TAPS_REQUIRED} РАЗА`;
+  function markIgnitionDone() {
+    done = true;
+    holding = false;
+    rpm = TARGET;
+    renderRpm();
 
     if (ignitionBtn) {
-      ignitionBtn.addEventListener('mousedown', handleTap);
-      ignitionBtn.addEventListener('touchstart', handleTap, { passive: false });
-      ignitionBtn.addEventListener('mouseleave', handleRelease);
-      ignitionBtn.addEventListener('touchcancel', handleRelease);
+      ignitionBtn.classList.remove('active', 'prep');
+      ignitionBtn.classList.add('done');
     }
-    window.addEventListener('mouseup', handleRelease);
-    window.addEventListener('touchend', handleRelease);
+    if (rpmWrap) rpmWrap.classList.add('passed');
+    if (ignitionMsg) ignitionMsg.classList.add('show');
+    updateButtonLabel();
 
-    function markIgnitionDone() {
-      done = true;
-      holding = false;
-      rpm = TARGET;
-      renderRpm();
+    stopEngineSound();
 
-      if (ignitionBtn) {
-        ignitionBtn.classList.remove('active', 'prep');
-        ignitionBtn.classList.add('done');
-      }
-      if (rpmWrap) rpmWrap.classList.add('passed');
-      if (ignitionMsg) ignitionMsg.classList.add('show');
-      updateButtonLabel();
+    body.classList.remove('lock-scroll');
+    if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
+  }
 
-      body.classList.remove('lock-scroll');
-      if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
-    }
-
-  /* ========================================================
-     БЛОКИРОВКА СКРОЛЛА В ЗОНЕ IGNITION
-     --------------------------------------------------------
-     Как только пользователь докрутил до ignition и ещё не завёл —
-     ставим body.lock-scroll (полный overflow: hidden), чтобы страница
-     вообще не двигалась. Как только секция покинута или двигатель
-     заведён — снимаем.
-     ======================================================== */
   function isIgnitionActive() {
-  if (!ignition) return false;
-  const rect = ignition.getBoundingClientRect();
-  // Ловим блок, как только его верх оказался в верхней половине экрана
-  // (или выше), и при этом секция занимает существенную часть видимой области
-  const topInView = rect.top <= window.innerHeight * 0.5;
-  const bottomInView = rect.bottom >= window.innerHeight * 0.5;
-  return topInView && bottomInView;
-}
+    if (!ignition) return false;
+    const rect = ignition.getBoundingClientRect();
+    const topInView = rect.top <= window.innerHeight * 0.5;
+    const bottomInView = rect.bottom >= window.innerHeight * 0.5;
+    return topInView && bottomInView;
+  }
 
   function updateIgnitionLock() {
     if (!ignition) return;
@@ -375,11 +369,9 @@
     showLockToast._t = setTimeout(() => lockToast.classList.remove('show'), 1600);
   }
 
-  // Пересчитываем блокировку на каждом скролле/ресайзе
   window.addEventListener('scroll', updateIgnitionLock, { passive: true });
   window.addEventListener('resize', updateIgnitionLock, { passive: true });
 
-  // Перехватываем колесо и тач, пока двигатель не заведён
   window.addEventListener('wheel', (e) => {
     if (!done && isIgnitionActive() && e.deltaY > 0) {
       e.preventDefault();
@@ -402,12 +394,9 @@
     }
   }, { passive: false });
 
-  // Первичная проверка (на случай, если страница открыта сразу на ignition)
   updateIgnitionLock();
 
-  /* ========================================================
-     SCENE — ПАРАЛЛАКС
-     ======================================================== */
+  // Параллакс первой сцены.
   const scene = document.getElementById('scene');
   const imageLayer = document.getElementById('imageLayer');
   const congratsLayer = document.getElementById('congratsLayer');
@@ -464,14 +453,13 @@
 
   updateScene();
 
-  /* ========================================================
-     3D БЛОК — БЕРЁТ ГОТОВУЮ МОДЕЛЬ ИЗ ПРЕДЗАГРУЗКИ
-     ======================================================== */
+  // 3D-блок. Активен только при наличии #model3dStage в разметке.
+  // Сейчас секция закомментирована в index.html — код ждёт возврата.
   (function initModel3D() {
-    const stage      = document.getElementById('model3dStage');
-    const canvas     = document.getElementById('model3dCanvas');
-    const loaderEl   = document.getElementById('model3dLoader');
-    const errorEl    = document.getElementById('model3dError');
+    const stage = document.getElementById('model3dStage');
+    const canvas = document.getElementById('model3dCanvas');
+    const loaderEl = document.getElementById('model3dLoader');
+    const errorEl = document.getElementById('model3dError');
     if (!stage || !canvas || typeof THREE === 'undefined') return;
 
     const scene3d = new THREE.Scene();
@@ -503,9 +491,9 @@
     keyLight.position.set(6, 10, 5);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.set(1024, 1024);
-    keyLight.shadow.camera.left   = -10;
-    keyLight.shadow.camera.right  = 10;
-    keyLight.shadow.camera.top    = 10;
+    keyLight.shadow.camera.left = -10;
+    keyLight.shadow.camera.right = 10;
+    keyLight.shadow.camera.top = 10;
     keyLight.shadow.camera.bottom = -10;
     scene3d.add(keyLight);
 
